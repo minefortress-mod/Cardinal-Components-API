@@ -33,30 +33,6 @@ allprojects {
     // import utility functions
     apply from: rootProject.file("utilities.gradle")
 
-    sourceSets {
-        testmod {
-            compileClasspath += main.compileClasspath
-            runtimeClasspath += main.runtimeClasspath
-        }
-    }
-
-    loom {
-        runs {
-            testmodClient {
-                client()
-                ideConfigGenerated project.rootProject == project
-                name = "Testmod Client"
-                source sourceSets.testmod
-            }
-            testmodServer {
-                server()
-                ideConfigGenerated project.rootProject == project
-                name = "Testmod Server"
-                source sourceSets.testmod
-            }
-        }
-    }
-
     repositories {
         maven {
             name = 'Ladysnake Mods'
@@ -79,11 +55,6 @@ allprojects {
         modApi "net.fabricmc:fabric-loader:${loader_version}"
         modApi fabricApi.module("fabric-api-base", fabric_api_version)
         modImplementation fabricApi.module("fabric-networking-api-v1", fabric_api_version)
-
-        testmodImplementation 'junit:junit:4.13'
-        testmodImplementation 'org.mockito:mockito-core:3.+'
-
-        testmodImplementation sourceSets.main.output
         modCompileOnly fabricApi.module("fabric-gametest-api-v1", fabric_api_version)
         modCompileOnly modLocalRuntime("io.github.ladysnake:elmendorf:${elmendorf_version}")
 
@@ -185,25 +156,6 @@ task javadocJar(type: Jar) {
 assemble.dependsOn javadocJar
 
 loom {
-    runs {
-        gametest {
-            inherit testmodServer
-
-            name "Game Test"
-
-            // Enable the gametest runner
-            vmArg "-Dfabric-api.gametest"
-            vmArg "-Dfabric-api.gametest.report-file=${project.buildDir}/junit.xml"
-            runDir "build/gametest"
-        }
-        autoTestServer {
-            inherit testmodServer
-
-            name "Auto Test Server"
-
-            vmArg "-Dfabric.autoTest"
-        }
-    }
 
     interfaceInjection {
         subprojects.each {
@@ -211,7 +163,6 @@ loom {
         }
     }
 }
-test.dependsOn runGametest
 
 subprojects {
     version = rootProject.version
@@ -248,7 +199,7 @@ subprojects {
     }
 }
 
-task remapMavenJar(type: net.fabricmc.loom.task.RemapJarTask, dependsOn: jar) {
+task remapMavenJar(type: RemapJarTask, dependsOn: jar) {
     input = jar.archiveFile
     archiveFileName = "${archivesBaseName}-${project.version}-maven.jar"
     addNestedDependencies = false
@@ -315,31 +266,9 @@ dependencies {
         subprojects.each {
             api project(path: ":${it.name}", configuration: "namedElements")
             include project("${it.name}:")
-            testmodImplementation project("${it.name}:").sourceSets.testmod.output
         }
     }
 }
-
-task testmodJar(type: Jar, dependsOn: testmodClasses) {
-    archiveBaseName = 'CCATest'
-    archiveClassifier = 'dev'
-    from(sourceSets.testmod.output) {
-        include 'fabric.mod.json'
-        expand 'version': project.version
-    }
-    from(sourceSets.testmod.output) {
-        exclude 'fabric.mod.json'
-    }
-}
-
-task remapTestmodJar(type: RemapJarTask, dependsOn: project.testmodJar) {
-    archiveBaseName = 'CCATest'
-    archiveClassifier = 'testmod'
-    input = testmodJar.archiveFile
-    addNestedDependencies = false
-}
-
-assemble.dependsOn(remapTestmodJar)
 
 ext {
     // no idea how else to import TaskModrinthUpload from release.gradle
