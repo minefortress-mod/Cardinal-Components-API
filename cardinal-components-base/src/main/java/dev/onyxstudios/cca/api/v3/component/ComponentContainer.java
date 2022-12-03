@@ -22,8 +22,7 @@
  */
 package dev.onyxstudios.cca.api.v3.component;
 
-import com.demonwav.mcdev.annotations.CheckEnv;
-import com.demonwav.mcdev.annotations.Env;
+
 import dev.onyxstudios.cca.api.v3.util.NbtSerializable;
 import dev.onyxstudios.cca.internal.base.GenericContainerBuilder;
 import dev.onyxstudios.cca.internal.base.asm.StaticComponentPluginBase;
@@ -57,7 +56,6 @@ public interface ComponentContainer extends NbtSerializable {
 
     void tickServerComponents();
 
-    @CheckEnv(Env.CLIENT)
     void tickClientComponents();
 
     /**

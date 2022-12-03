@@ -1,25 +1,15 @@
-import com.modrinth.minotaur.TaskModrinthUpload
 import net.fabricmc.loom.task.RemapJarTask
 
 import java.time.Year
 
 plugins {
-    id "fabric-loom" version "0.11-SNAPSHOT" apply false
-    id 'io.github.juuxel.loom-quiltflower' version "1.6.0"
+    id 'fabric-loom' version '1.0.12'
     id "org.cadixdev.licenser" version "0.6.1"
-    id "com.matthewprenger.cursegradle" version "1.4.0"
-    id 'com.modrinth.minotaur' version '1.2.1'
-    id "com.jfrog.artifactory" version "4.21.0"
-    id 'org.ajoberstar.grgit' version '3.1.1'
-    id 'com.github.breadmoirai.github-release' version '2.2.12'
-    id "maven-publish"
     id "java-library"
 }
 
 allprojects {
     apply plugin: 'java-library'
-    apply plugin: 'maven-publish'
-    apply plugin: 'com.jfrog.artifactory'
     apply plugin: 'fabric-loom'
     apply plugin: 'org.cadixdev.licenser'
 
@@ -59,12 +49,7 @@ allprojects {
         modCompileOnly modLocalRuntime("io.github.ladysnake:elmendorf:${elmendorf_version}")
 
         compileOnly "com.google.code.findbugs:jsr305:3.0.2"
-        compileOnly "com.demonwav.mcdev:annotations:1.0"
         compileOnly "org.jetbrains:annotations:19.0.0"
-    }
-
-    loom {
-        shareRemapCaches = true
     }
 
     repositories {
@@ -167,28 +152,6 @@ loom {
 subprojects {
     version = rootProject.version
 
-    publishing {
-        publications {
-            relocation(MavenPublication) {
-                pom {
-                    // Old artifact coordinates
-                    groupId = "io.github.onyxstudios.Cardinal-Components-API"
-
-                    distributionManagement {
-                        relocation {
-                            // New artifact coordinates
-                            groupId = "dev.onyxstudios.cardinal-components-api"
-                            message = "groupId has been changed"
-                        }
-                    }
-                }
-            }
-            mavenJava(MavenPublication) {
-                from components.java
-            }
-        }
-    }
-
     javadoc.enabled = false
 
     afterEvaluate {
@@ -205,36 +168,6 @@ task remapMavenJar(type: RemapJarTask, dependsOn: jar) {
     addNestedDependencies = false
 }
 assemble.dependsOn remapMavenJar
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact(remapMavenJar) {
-                builtBy remapMavenJar
-            }
-
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
-
-            artifact javadocJar
-
-            pom.withXml {
-                def depsNode = asNode().appendNode("dependencies")
-                subprojects.each {
-                    def depNode = depsNode.appendNode("dependency")
-                    depNode.appendNode("groupId", it.group)
-                    depNode.appendNode("artifactId", it.name)
-                    depNode.appendNode("version", it.version)
-                    depNode.appendNode("scope", "compile")
-                }
-            }
-        }
-    }
-}
-
-// Required until the deprecation is removed. CCA's main jar that is published to maven does not contain sub modules.
-loom.disableDeprecatedPomGeneration(publishing.publications.mavenJava)
 
 task licenseFormatAll
 subprojects { p -> licenseFormatAll.dependsOn("${p.path}:licenseFormat") }
@@ -269,10 +202,3 @@ dependencies {
         }
     }
 }
-
-ext {
-    // no idea how else to import TaskModrinthUpload from release.gradle
-    ModrinthUpload = TaskModrinthUpload
-}
-
-apply from: 'release.gradle'
