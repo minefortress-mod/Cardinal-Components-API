@@ -209,26 +209,20 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/" + System.getenv("GITHUB_REPOSITORY"))
+            url = uri("https://maven.pkg.github.com/" + project.findProperty("gpr.repo") ?: System.getenv("GITHUB_REPOSITORY"))
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
                 password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
             }
         }
     }
-    publications {
-        allPublications(MavenPublication) {
-            // Configure the main module publication
-            from components.java
-        }
-    }
-
-    // Include submodules
-    subprojects { subproject ->
-        // Create a separate publication for each submodule using submodule name
-        publishing.publications.create("mavenJava-${subproject.name}", MavenPublication) {
-            from subproject.components.java
-        }
-    }
 }
 
+subprojects { sub ->
+    publishing.publications.create("mavenJava-${sub.name}", MavenPublication) {
+        from components.java
+        groupId = project.group
+        artifactId = sub.name
+        version = project.version
+    }
+}
