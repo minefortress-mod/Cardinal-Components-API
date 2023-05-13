@@ -217,8 +217,18 @@ publishing {
         }
     }
     publications {
-        mavenJava(MavenPublication) {
+        allPublications(MavenPublication) {
+            // Configure the main module publication
             from components.java
+        }
+    }
+
+    subprojects {
+        // Create a separate publication for each submodule
+        project.afterEvaluate {
+            publishing.publications.create("mavenJava-${project.name}", MavenPublication) {
+                from components.java
+            }
         }
     }
 }
