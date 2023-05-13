@@ -11,6 +11,7 @@ on:
   push:
     tags:
         - 2.*.*\+minefortress
+        - 4.*.*\+minefortress
 
 jobs:
   build:
@@ -44,6 +45,6 @@ jobs:
       with:
         arguments: publishAllPublicationsToGitHubPackagesRepository
       env:
-        USERNAME: ${{ github.actor }}
-        TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_USERNAME: ${{ github.actor }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         TAG_NAME: ${{ github.ref_name }}
