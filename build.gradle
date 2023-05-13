@@ -6,6 +6,7 @@ plugins {
     id 'fabric-loom' version '1.0.12'
     id "org.cadixdev.licenser" version "0.6.1"
     id "java-library"
+    id "maven-publish"
 }
 
 allprojects {
@@ -18,7 +19,7 @@ allprojects {
     }
 
     group = "dev.onyxstudios.cardinal-components-api"
-    version = project.mod_version
+    version = System.getenv("TAG_NAME") ?: project.mod_version
 
     // import utility functions
     apply from: rootProject.file("utilities.gradle")
@@ -202,3 +203,23 @@ dependencies {
         }
     }
 }
+
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/" + System.getenv("GITHUB_REPOSITORY"))
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
