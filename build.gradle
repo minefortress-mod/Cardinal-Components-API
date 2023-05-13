@@ -223,12 +223,11 @@ publishing {
         }
     }
 
-    subprojects {
-        // Create a separate publication for each submodule
-        project.afterEvaluate {
-            publishing.publications.create("mavenJava-${project.name}", MavenPublication) {
-                from components.java
-            }
+    // Include submodules
+    subprojects { subproject ->
+        // Create a separate publication for each submodule using submodule name
+        publishing.publications.create("mavenJava-${subproject.name}", MavenPublication) {
+            from subproject.components.java
         }
     }
 }
