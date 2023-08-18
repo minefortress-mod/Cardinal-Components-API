@@ -1,12 +1,10 @@
-import com.github.breadmoirai.githubreleaseplugin.GithubReleaseExtension
 import net.fabricmc.loom.task.RemapJarTask
 
 import java.net.URI
 
 plugins {
-    id("fabric-loom") version "1.3-SNAPSHOT" apply false
+    id("fabric-loom") version "1.3-SNAPSHOT"
     id("io.github.juuxel.loom-quiltflower") version "1.6.0"
-    id("io.github.ladysnake.chenille") version "0.11.3"
     id("org.cadixdev.licenser") version "0.6.1"
 }
 
@@ -15,16 +13,8 @@ val fabricApiVersion: String = providers.gradleProperty("fabric_api_version").ge
 allprojects {
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
-    apply(plugin = "io.github.ladysnake.chenille")
     apply(plugin = "org.cadixdev.licenser")
     apply(plugin = "fabric-loom")
-
-    chenille {
-        javaVersion = 17
-        license = "MIT"
-        displayName = providers.gradleProperty("display_name").get()
-        owners = providers.gradleProperty("owners").get()
-    }
 
     group = "dev.onyxstudios.cardinal-components-api"
     version = providers.gradleProperty("mod_version").get()
@@ -55,7 +45,7 @@ allprojects {
         modImplementation(fabricApi.module("fabric-lifecycle-events-v1", fabricApiVersion))
 
         modCompileOnly(fabricApi.module("fabric-gametest-api-v1", fabricApiVersion))
-        modLocalImplementation("io.github.ladysnake:elmendorf:${props["elmendorf_version"]}")
+        modImplementation("io.github.ladysnake:elmendorf:${props["elmendorf_version"]}")
 
         compileOnly("com.google.code.findbugs:jsr305:3.0.2")
         compileOnly("com.demonwav.mcdev:annotations:1.0")
@@ -173,12 +163,6 @@ subprojects {
         }
     }
 
-    chenille {
-        configurePublishing {
-            withLadysnakeMaven()
-        }
-    }
-
     tasks.javadoc.configure {
         isEnabled = false
     }
@@ -224,22 +208,6 @@ extensions.configure(PublishingExtension::class.java) {
     }
 }
 
-chenille {
-    configureTestmod {
-        withBaseTestRuns()
-    }
-    configurePublishing {
-        withLadysnakeMaven()
-        withCurseforgeRelease()
-        withGithubRelease()
-        withModrinthRelease()
-    }
-}
-
-extensions.configure(GithubReleaseExtension::class.java) {
-    owner = providers.gradleProperty("owners")
-}
-
 subprojects.forEach { tasks.remapJar.configure { dependsOn("${it.path}:remapJar") } }
 
 dependencies {
@@ -265,30 +233,14 @@ dependencies {
         subprojects.forEach {
             api(project(path = ":${it.name}", configuration = "namedElements"))
             include(project("${it.name}:"))
-            "testmodImplementation"(project("${it.name}:").sourceSets["testmod"].output)
         }
     }
-}
-
-val testmodJar by tasks.registering(Jar::class) {
-    archiveBaseName.set("CCATest")
-    archiveClassifier.set("dev")
-    from(sourceSets["testmod"].output) {
-        include("fabric.mod.json")
-        expand(mapOf("version" to project.version))
-    }
-    from(sourceSets["testmod"].output) {
-        exclude("fabric.mod.json")
-    }
-    dependsOn(tasks.named("testmodClasses"))
 }
 
 val remapTestmodJar by tasks.registering(RemapJarTask::class) {
     archiveBaseName.set("CCATest")
     archiveClassifier.set("testmod")
-    inputFile.set(testmodJar.flatMap { it.archiveFile })
     addNestedDependencies = false
-    dependsOn(testmodJar)
 }
 
 tasks.assemble.configure {
