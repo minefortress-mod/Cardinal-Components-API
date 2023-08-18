@@ -238,16 +238,6 @@ dependencies {
     }
 }
 
-val remapTestmodJar by tasks.registering(RemapJarTask::class) {
-    archiveBaseName.set("CCATest")
-    archiveClassifier.set("testmod")
-    addNestedDependencies = false
-}
-
-tasks.assemble.configure {
-    dependsOn(remapTestmodJar)
-}
-
 publishing {
     repositories {
         maven {
