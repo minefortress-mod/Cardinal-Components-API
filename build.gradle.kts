@@ -6,6 +6,7 @@ plugins {
     id("fabric-loom") version "1.3-SNAPSHOT"
     id("io.github.juuxel.loom-quiltflower") version "1.6.0"
     id("org.cadixdev.licenser") version "0.6.1"
+    id("maven-publish")
 }
 
 val fabricApiVersion: String = providers.gradleProperty("fabric_api_version").get()
@@ -245,4 +246,30 @@ val remapTestmodJar by tasks.registering(RemapJarTask::class) {
 
 tasks.assemble.configure {
     dependsOn(remapTestmodJar)
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/" + System.getenv("GITHUB_REPOSITORY"))
+            credentials {
+                username = System.getenv("GITHUB_USERNAME")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+}
+
+subprojects.forEach {sub ->
+    publishing {
+        publications {
+            create("mavenJava-${sub.name}", MavenPublication::class) {
+                from(components["java"])
+                groupId = project.group as String
+                artifactId = sub.name
+                version = project.version as String
+            }
+        }
+    }
 }
