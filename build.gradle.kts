@@ -18,7 +18,13 @@ allprojects {
     apply(plugin = "fabric-loom")
 
     group = "dev.onyxstudios.cardinal-components-api"
-    version = providers.gradleProperty("mod_version").get()
+
+    version = if(System.getenv("TAG_NAME") != null) {
+        System.getenv("TAG_NAME")
+    } else {
+        providers.gradleProperty("mod_version").get()
+    }
+
 
     repositories {
         maven {
