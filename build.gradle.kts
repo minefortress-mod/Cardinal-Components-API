@@ -19,11 +19,7 @@ allprojects {
 
     group = "dev.onyxstudios.cardinal-components-api"
 
-    version = if(System.getenv("TAG_NAME") != null) {
-        System.getenv("TAG_NAME")
-    } else {
-        providers.gradleProperty("mod_version").get()
-    }
+    version = System.getenv("TAG_NAME") ?: providers.gradleProperty("mod_version").get()
 
 
     repositories {
