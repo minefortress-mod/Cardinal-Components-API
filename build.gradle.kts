@@ -257,7 +257,7 @@ subprojects.forEach {sub ->
     publishing {
         publications {
             create("mavenJava-${sub.name}", MavenPublication::class) {
-                from(components["java"])
+                from(sub.components["java"])
                 groupId = project.group as String
                 artifactId = sub.name
                 version = project.version as String
