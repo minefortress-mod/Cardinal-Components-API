@@ -15,7 +15,7 @@ A components API for Quilt and Fabric that is easy, modular, and extremely fast.
 *Cardinal Components API is a library for Minecraft mods to create data
 components that can be attached to various providers. Those components
 provide a standardized interface for mods to interact with otherwise opaque
-objects and behaviours, thereby helping both mod creation and compatibility.*
+objects and behaviours, thereby helping both mod creation and compatibility.* [^1]
 
 
 **TL;DR: It allows you to attach data to things**
@@ -30,7 +30,7 @@ which would require re-implementing all that on a custom block or entity.
 
 **Cardinal Components API takes care of it all.**
 
-Detailed information is available in [this repository's **wiki**](https://github.com/OnyxStudios/Cardinal-Components-API/wiki).
+*Detailed information is available in [the website's **wiki**](https://ladysnake.org/wiki/cardinal-components-api/landing)*.
 The information below is a condensed form of the latter.  
 If you have questions or need help with this library, you can also join the [Ladysnake Discord](https://discord.ladysnake.org).
 
@@ -50,7 +50,7 @@ If you have questions or need help with this library, you can also join the [Lad
 
 **Upgrade information: versions 4.1.0 onwards of Cardinal Components API use the `dev.onyxstudios.cardinal-components-api` (lowercase) maven group instead of `io.github.onyxstudios.Cardinal-Components-API`**
 
-Latest versions of Cardinal Components API are available on Artifactory:
+Latest versions of Cardinal Components API are available on the Ladysnake maven:
 ```gradle
 repositories {
     maven {
@@ -70,6 +70,9 @@ dependencies {
     include "dev.onyxstudios.cardinal-components-api:<MODULE>:<VERSION>"
 }
 ```
+
+Check out **https://ladysnake.org/wiki/cardinal-components-api/dev-install** for up-to-date buildscript samples
+with `build.gradle`, `build.gradle.kts`, and  `libs.versions.toml`.
 
 You can find the current version of the API in the [**releases**](https://github.com/OnyxStudios/Cardinal-Components-API/releases) tab of the repository on Github.
 
@@ -268,3 +271,5 @@ public static void useMagik(Entity provider) { // anything will work, as long as
 ## Test Mod
 A test mod for the API is available in this repository, under `src/testmod`. It makes uses of most features from the API.
 Its code is outlined in a secondary [readme](./src/testmod/readme.md).
+
+[^1]: this description has been made exaggeratedly convoluted for comedic effects.

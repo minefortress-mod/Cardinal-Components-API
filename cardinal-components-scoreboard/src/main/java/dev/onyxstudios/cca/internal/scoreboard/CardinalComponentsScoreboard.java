@@ -1,6 +1,6 @@
 /*
  * Cardinal-Components-API
- * Copyright (C) 2019-2023 OnyxStudios
+ * Copyright (C) 2019-2023 Ladysnake
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ import dev.onyxstudios.cca.api.v3.scoreboard.TeamAddCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
+import net.minecraft.network.packet.s2c.common.CustomPayloadS2CPacket;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.util.Identifier;
 

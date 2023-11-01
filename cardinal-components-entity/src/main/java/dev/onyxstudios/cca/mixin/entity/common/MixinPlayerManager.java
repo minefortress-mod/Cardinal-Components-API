@@ -1,6 +1,6 @@
 /*
  * Cardinal-Components-API
- * Copyright (C) 2019-2023 OnyxStudios
+ * Copyright (C) 2019-2023 Ladysnake
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@ package dev.onyxstudios.cca.mixin.entity.common;
 import dev.onyxstudios.cca.api.v3.entity.PlayerSyncCallback;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;
+import net.minecraft.server.network.ConnectedClientData;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -41,7 +42,7 @@ public abstract class MixinPlayerManager {
                     target = "Lnet/minecraft/server/network/ServerPlayerEntity;getStatusEffects()Ljava/util/Collection;"
             )
     )
-    private void onPlayerLogIn(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
+    private void onPlayerLogIn(ClientConnection connection, ServerPlayerEntity player, ConnectedClientData clientData, CallbackInfo ci) {
         PlayerSyncCallback.EVENT.invoker().onPlayerSync(player);
     }
 

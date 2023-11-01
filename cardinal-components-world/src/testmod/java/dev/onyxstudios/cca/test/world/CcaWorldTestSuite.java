@@ -1,6 +1,6 @@
 /*
  * Cardinal-Components-API
- * Copyright (C) 2019-2023 OnyxStudios
+ * Copyright (C) 2019-2023 Ladysnake
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,10 @@
 package dev.onyxstudios.cca.test.world;
 
 import dev.onyxstudios.cca.test.base.LoadAwareTestComponent;
-import io.github.ladysnake.elmendorf.GameTestUtil;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.test.GameTest;
 import net.minecraft.test.TestContext;
+import org.ladysnake.elmendorf.GameTestUtil;
 
 public class CcaWorldTestSuite implements FabricGameTest {
     @GameTest(templateName = EMPTY_STRUCTURE)

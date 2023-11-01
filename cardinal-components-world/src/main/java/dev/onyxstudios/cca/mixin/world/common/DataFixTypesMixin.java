@@ -20,10 +20,27 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
-package dev.onyxstudios.cca.internal.item;
+package dev.onyxstudios.cca.mixin.world.common;
 
-import dev.onyxstudios.cca.api.v3.util.MethodsReturnNonnullByDefault;
+import com.mojang.datafixers.DataFixer;
+import com.mojang.serialization.Dynamic;
+import dev.onyxstudios.cca.internal.world.ComponentPersistentState;
+import net.minecraft.datafixer.DataFixTypes;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+@Mixin(DataFixTypes.class)
+public class DataFixTypesMixin {
+    @Inject(
+        method = "update(Lcom/mojang/datafixers/DataFixer;Lcom/mojang/serialization/Dynamic;II)Lcom/mojang/serialization/Dynamic;",
+        at = @At("HEAD"),
+        cancellable = true
+    )
+    private <T> void cancelIfCca(DataFixer dataFixer, Dynamic<T> dynamic, int oldVersion, int newVersion, CallbackInfoReturnable<Dynamic<T>> cir) {
+        if (ComponentPersistentState.LOADING.get()) {
+            cir.setReturnValue(dynamic);
+        }
+    }
+}

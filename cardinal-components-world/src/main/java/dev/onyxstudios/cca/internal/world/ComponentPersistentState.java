@@ -1,6 +1,6 @@
 /*
  * Cardinal-Components-API
- * Copyright (C) 2019-2023 OnyxStudios
+ * Copyright (C) 2019-2023 Ladysnake
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,21 @@
 package dev.onyxstudios.cca.internal.world;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentContainer;
+import net.minecraft.datafixer.DataFixTypes;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.PersistentState;
 
 public class ComponentPersistentState extends PersistentState {
+    public static final ThreadLocal<Boolean> LOADING = ThreadLocal.withInitial(() -> false);
+
+    public static Type<ComponentPersistentState> getType(ComponentContainer components) {
+        return new Type<>(
+            () -> new ComponentPersistentState(components),
+            tag -> ComponentPersistentState.fromNbt(components, tag),
+            DataFixTypes.LEVEL
+        );
+    }
+
     private final ComponentContainer components;
 
     public ComponentPersistentState(ComponentContainer components) {

@@ -1,6 +1,6 @@
 /*
  * Cardinal-Components-API
- * Copyright (C) 2019-2023 OnyxStudios
+ * Copyright (C) 2019-2023 Ladysnake
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@ package dev.onyxstudios.cca.test.chunk;
 import dev.onyxstudios.cca.test.base.LoadAwareTestComponent;
 import dev.onyxstudios.cca.test.base.TickingTestComponent;
 import dev.onyxstudios.cca.test.base.Vita;
-import io.github.ladysnake.elmendorf.GameTestUtil;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.test.GameTest;
@@ -35,6 +34,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.ChunkSerializer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.WorldChunk;
+import org.ladysnake.elmendorf.GameTestUtil;
 
 public class CcaChunkTestSuite implements FabricGameTest {
     @GameTest(templateName = EMPTY_STRUCTURE)
