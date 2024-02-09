@@ -129,10 +129,6 @@ tasks.assemble.configure {
     dependsOn(javadocJar)
 }
 
-tasks.test.configure {
-    dependsOn(tasks.named("runGametest"))
-}
-
 subprojects {
     version = rootProject.version
 
